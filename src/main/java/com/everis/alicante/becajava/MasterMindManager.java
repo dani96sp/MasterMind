@@ -6,55 +6,55 @@ import java.util.List;
 public class MasterMindManager {
 	
 	int intentosRestantes=10;
-	List<Integer> numerosIntentados = new ArrayList<Integer>();
-	Integer numeroInicial;
+	List<String> numerosIntentados = new ArrayList<String>();
+	String numeroInicial;
 	boolean win=false;
 	
-	public MasterMindManager(Integer numeroInicial) {
+	public MasterMindManager(String numeroInicial) {
 		this.numeroInicial = numeroInicial;
 	}
 	
-	public ConsultaNumeroResult ConsultarNumero(Integer numero) {
+	public ConsultaNumeroResult ConsultarNumero(String numero) {
 		ConsultaNumeroResult consulta = new ConsultaNumeroResult();
-		String numeroString = numero.toString();
+		
 		// Correccion de digitos
-		switch (numeroString.length()) {
+		switch (numero.length()) {
 		case 0:
-			numeroString = "00000";
+			numero = "00000";
 			break;
 		case 1:
-			numeroString = "0000" + numeroString;
+			numero = "0000" + numero;
 			break;
 		case 2:
-			numeroString = "000" + numeroString;
+			numero = "000" + numero;
 			break;
 		case 3:
-			numeroString = "00" + numeroString;
+			numero = "00" + numero;
 			break;
 		case 4:
-			numeroString = "0" + numeroString;
+			numero = "0" + numero;
 			break;
 		default:
 			break;
 		}
 
-		String numeroInicialString = numeroInicial.toString();
+		
 		// Correccion de digitos
-		switch (numeroInicialString.length()) {
+		switch (numeroInicial.length()) {
 		case 0:
-			numeroInicialString = "00000";
+			numeroInicial = "00000";
 			break;
 		case 1:
-			numeroInicialString = "0000" + numeroInicialString;
+			numeroInicial = "0000" + numeroInicial;
 			break;
 		case 2:
-			numeroInicialString = "000" + numeroInicialString;
+			numeroInicial = "000" + numeroInicial;
 			break;
 		case 3:
-			numeroInicialString = "00" + numeroInicialString;
+			numeroInicial = "00" + numeroInicial;
 			break;
 		case 4:
-			numeroInicialString = "0" + numeroInicialString;
+			numeroInicial = "0" + numeroInicial;
 			break;
 		default:
 			break;
@@ -62,9 +62,9 @@ public class MasterMindManager {
 		
 		
 		for (int i = 0; i <5; i++) {
-			if (numeroString.charAt(i) == numeroInicialString.charAt(i)) {
+			if (numero.charAt(i) == numeroInicial.charAt(i)) {
 				consulta.setNegras(consulta.getNegras()+1);
-				System.out.println("Coincide en la posicion "+ (i+1) + " el numero: "+ numeroString.charAt(i));
+				System.out.println("Coincide en la posicion "+ (i+1) + " el numero: "+ numero.charAt(i));
 			}
 
 		}
@@ -75,7 +75,7 @@ public class MasterMindManager {
 			
 			for (int i = 0; i <5; i++) {
 				for (int j = 0; j <5; j++) {
-					if (numeroString.charAt(j) == numeroInicialString.charAt(i)) {
+					if (numero.charAt(j) == numeroInicial.charAt(i)) {
 						consulta.setBlancas(consulta.getBlancas()+1);
 						j=5;
 					}	
