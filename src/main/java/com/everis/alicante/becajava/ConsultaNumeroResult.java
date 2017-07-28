@@ -7,7 +7,7 @@ public class ConsultaNumeroResult {
 
 	@Override
 	public String toString() {
-		return "Numero de negras: " + negras + "\nNumero de blancas: " + blancas;
+		return "Numero de negras: " + negras + " | Numero de blancas: " + blancas;
 	}
 
 	public int getNegras() {

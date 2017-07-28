@@ -106,44 +106,46 @@ public class MasterMindMain {
 		String random = String.valueOf(12345);
 		String nextNumber = "";
 		Integer numero;
-//		 <Server>
+
 		 final SocketServerRunner socketServerRunner = SocketServerRunner.getInstance();
 		 socketServerRunner.run(4200);
 		 Message message;
-		 message = socketServerRunner.getLastMessageFromPool();
-		 System.out.println(String.format("Message received from client. Type: %s, Message: %s"
-				 , message.getType()
-				 , message.getMessage()));
-//		 <Server/>
+
 		 Scanner sc = new Scanner(System.in);
 		 MasterMindManager game = new MasterMindManager(random);
 		 
 		 Message msg = null;
+		 Message msg2 = null;
 		 
 		 do{
+			 msg2 = new Message(MessageType.MESSAGE, "Tienes " + game.getIntentosRestantes() +  " intentos");
+			 socketServerRunner.sendToClient(msg2);
 			 message = socketServerRunner.getLastMessageFromPool();
-//			 System.out.println(random);
-			 System.out.println("Tienes " + game.getIntentosRestantes() +  " intentos");
+			 System.out.println(String.format("Message received from client. Type: %s, Message: %s"
+					 , message.getType()
+					 , message.getMessage()));
+			 System.out.println(random);
+			
 			 nextNumber = message.getMessage();
 			 numero = Integer.parseInt(nextNumber);
 				if(numero <= 0 || numero >= 99999) {
-					 message = socketServerRunner.getLastMessageFromPool();
-					System.out.println("Numero invalido, inserte un numero entre el 0 y el 99999");
+					 msg2 = new Message(MessageType.MESSAGE, "Numero invalido");
+					 socketServerRunner.sendToClient(msg2);
+					 msg2 = new Message(MessageType.MESSAGE, "Inserte un numero entre el 0 y el 99999");
+					 socketServerRunner.sendToClient(msg2);
 				} else {
-			 	 game.ConsultarNumero(nextNumber);
-				 msg = Message.fromString(nextNumber);
+			 	 String result = String.valueOf(game.ConsultarNumero(nextNumber));
+				 msg = new Message(MessageType.MESSAGE, result);
 				 socketServerRunner.sendToClient(msg);
 			 }
 		 }while (game.tieneIntentos());
 		
 			if (game.isWin()) {
-				 message = socketServerRunner.getLastMessageFromPool();
-				System.out.println("Has ganado!");
-				 message = socketServerRunner.getLastMessageFromPool();
-				System.out.println("Has intentado los siguientes numeros: " + game.numerosIntentados);
+				 msg2 = new Message(MessageType.MESSAGE, "Has ganado! | Has intentado los siguientes numeros: " + game.numerosIntentados);
+				 socketServerRunner.sendToClient(msg2);
 			}else {
-				 message = socketServerRunner.getLastMessageFromPool();
-				System.out.println("Has perdido!");
+				 msg2 = new Message(MessageType.MESSAGE, "Has perdido!");
+				 socketServerRunner.sendToClient(msg2);
 			}	
 	}
 	
@@ -152,11 +154,13 @@ public class MasterMindMain {
 	private static void jugarLocal() throws IOException, ClientException {
 		final SocketClientRunner socketClientRunner = SocketClientRunner.getInstance();
         socketClientRunner.run("localhost", 4200);
+        System.out.println("Bienvenido al juego MasterMind");
 
         String message;
         String resultado = "";
         do {   	
-            System.out.println("Insert a value to send to the server");
+            System.out.println(socketClientRunner.waitServer().getMessage());
+            System.out.println("Introduce un numero de 1 a 5 cifras");
             Scanner in = new Scanner(System.in);
             message = in.nextLine();
             socketClientRunner.sendToServer(MessageType.MESSAGE, message);
